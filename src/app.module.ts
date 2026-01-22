@@ -6,10 +6,24 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import dbConfig from './config/db.config';
+import { LoggerModule } from 'nestjs-pino';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
+    CommonModule,
+    
+    LoggerModule.forRoot({
+      pinoHttp: {
+        transport: process.env.NODE_ENV !== 'production'
+          ? { target: 'pino-pretty' }
+          : undefined,
+        level: 'info',
+      },
+    }),
+
     ConfigModule.forRoot({
       isGlobal: true,
       load: [dbConfig],
@@ -32,6 +46,8 @@ import dbConfig from './config/db.config';
     UsersModule,
 
     AuthModule,
+
+    SubscriptionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
