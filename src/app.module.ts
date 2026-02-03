@@ -10,9 +10,14 @@ import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import dbConfig from './config/db.config';
 import { LoggerModule } from 'nestjs-pino';
 import { CommonModule } from './common/common.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { BullModule } from '@nestjs/bull';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
+    
     CommonModule,
     
     LoggerModule.forRoot({
@@ -21,6 +26,19 @@ import { CommonModule } from './common/common.module';
           ? { target: 'pino-pretty' }
           : undefined,
         level: 'info',
+        serializers: {
+          req(req) {
+            return {
+              method: req.method,
+              url: req.url,
+            };
+          },
+          res(res) {
+            return {
+              statusCode: res.statusCode,
+            };
+          },
+        },
       },
     }),
 
@@ -41,6 +59,13 @@ import { CommonModule } from './common/common.module';
       },
     }),
 
+    BullModule.forRoot({
+      redis: {
+        host: process.env.REDIS_HOST ?? 'localhost',
+        port: +(process.env.REDIS_PORT ?? 6379),
+      },
+    }),
+
     EventsModule,
 
     UsersModule,
@@ -48,6 +73,8 @@ import { CommonModule } from './common/common.module';
     AuthModule,
 
     SubscriptionsModule,
+
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

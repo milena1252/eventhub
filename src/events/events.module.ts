@@ -1,13 +1,34 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { EventsController } from './events.controller';
 import { EventsService } from './events.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Event } from './event.entity';
+import { NotificationsModule } from 'src/notifications/notifications.module';
+import { SubscriptionsModule } from 'src/subscriptions/subscriptions.module';
+import { BullModule } from '@nestjs/bull';
+import { EventsCleanupProcessor } from './processors/events-cleanup.processor';
+import { EventsCleanupCron } from './cron/events-cleanup.cron';
+import { Subscription } from 'src/subscriptions/subscription.entity';
+import { EventsStatsProcessor } from './processors/events-stats.processor';
+import { EventsStatsCron } from './cron/events-stats.cron';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Event])],
+  imports: [
+    TypeOrmModule.forFeature([Event, Subscription]),
+    forwardRef(() => SubscriptionsModule),
+    NotificationsModule,
+    BullModule.registerQueue({
+      name: 'events',
+    }),
+  ],
   controllers: [EventsController],
-  providers: [EventsService],
+  providers: [
+    EventsService, 
+    EventsCleanupProcessor, 
+    EventsCleanupCron,
+    EventsStatsProcessor,
+    EventsStatsCron,
+  ],
   exports: [EventsService],
 })
 export class EventsModule {}
