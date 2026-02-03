@@ -1,15 +1,18 @@
-import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, ForbiddenException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Subscription } from './subscription.entity';
 import { Repository } from 'typeorm';
 import { EventsService } from 'src/events/events.service';
+import { NotificationsService } from 'src/notifications/notifications.service';
 
 @Injectable()
 export class SubscriptionsService {
     constructor(
         @InjectRepository(Subscription)
         private readonly subRepo: Repository<Subscription>,
+        @Inject(forwardRef(() => EventsService))
         private readonly eventService: EventsService,
+        private readonly notifications: NotificationsService,
     ) {}
 
     async subscribe(userId: string, eventId: string) {
@@ -38,7 +41,9 @@ export class SubscriptionsService {
             isActive: true,
         });
 
-        return this.subRepo.save(sub);
+        const saved = await this.subRepo.save(sub);
+        
+        return saved;
     }
 
     async unsubscribe(userId: string, eventId: string) {
@@ -58,6 +63,14 @@ export class SubscriptionsService {
         return this.subRepo.find({
             where: { userId, isActive: true },
         });
+    }
+
+    async findEventSubscribers(eventId: string): Promise<string[]> {
+        const subs = await this.subRepo.find({
+            where: { eventId, isActive: true },
+        });
+
+        return subs.map(s => s.userId);
     }
 
 }

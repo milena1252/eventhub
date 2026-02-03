@@ -38,4 +38,10 @@ export class Event {
 
     @DeleteDateColumn()
     deletedAt: Date;
+
+    @Column({ default: 0 })
+    subscribersCount: number;
+
+    @Column({ default: false })
+    isPopular: boolean;
 }
