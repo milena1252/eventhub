@@ -1,13 +1,24 @@
+import { NotificationLog } from "../notifications/notification-log.entity";
+import { Subscription } from "../subscriptions/subscription.entity";
+import { User } from "../users/user.entity";
 import { 
     Column, 
     CreateDateColumn, 
     DeleteDateColumn, 
     Entity, 
+    Index, 
+    JoinColumn, 
+    ManyToOne, 
+    OneToMany, 
     PrimaryGeneratedColumn, 
     UpdateDateColumn 
 } from "typeorm";
 
 @Entity('events')
+@Index(['creatorId'])
+@Index(['isActive'])
+@Index(['isPopular'])
+@Index(['startAt'])
 export class Event {
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -21,6 +32,10 @@ export class Event {
     @Column()
     creatorId: string; //userId
 
+    @ManyToOne(() => User, (user) => user.events, { onDelete: 'CASCADE'})
+    @JoinColumn({ name: 'creatorId' })
+    creator: User;
+
     @Column({ type: 'timestamptz' })
     startAt: Date;
 
@@ -29,6 +44,12 @@ export class Event {
 
     @Column({ default: true })
     isActive: boolean;
+    
+    @Column({ default: 0 })
+    subscribersCount: number;
+
+    @Column({ default: false })
+    isPopular: boolean;
 
     @CreateDateColumn()
     createdAt: Date;
@@ -36,12 +57,13 @@ export class Event {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @DeleteDateColumn()
+    @DeleteDateColumn({ nullable: true })
     deletedAt: Date;
 
-    @Column({ default: 0 })
-    subscribersCount: number;
+    //relations
+    @OneToMany(() => Subscription, (sub) => sub.event)
+    subscriptions: Subscription[];
 
-    @Column({ default: false })
-    isPopular: boolean;
+    @OneToMany(() => NotificationLog, (log) => log.event)
+    notificationLogs: NotificationLog[];
 }

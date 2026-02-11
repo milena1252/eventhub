@@ -10,7 +10,7 @@ export class EventsStatsCron {
         private readonly queue: Queue,
     ) {}
 
-    @Cron(CronExpression.EVERY_HOUR)
+    @Cron(CronExpression.EVERY_MINUTE)
     async recalculateStats() {
         await this.queue.add('recalculate-stats', {});
     }
