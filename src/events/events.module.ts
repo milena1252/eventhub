@@ -11,12 +11,15 @@ import { EventsCleanupCron } from './cron/events-cleanup.cron';
 import { Subscription } from 'src/subscriptions/subscription.entity';
 import { EventsStatsProcessor } from './processors/events-stats.processor';
 import { EventsStatsCron } from './cron/events-stats.cron';
+import { EventsImportProcessor } from './processors/events-import.processor';
+import { OutboxModule } from 'src/outbox/outbox.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Event, Subscription]),
     forwardRef(() => SubscriptionsModule),
     NotificationsModule,
+    OutboxModule,
     BullModule.registerQueue({
       name: 'events',
     }),
@@ -28,7 +31,10 @@ import { EventsStatsCron } from './cron/events-stats.cron';
     EventsCleanupCron,
     EventsStatsProcessor,
     EventsStatsCron,
+    EventsImportProcessor,
   ],
   exports: [EventsService],
 })
 export class EventsModule {}
+
+

@@ -1,4 +1,7 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Event } from "../events/event.entity";
+import { NotificationLog } from "../notifications/notification-log.entity";
+import { Subscription } from "../subscriptions/subscription.entity";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 export enum UserRole {
     USER = 'USER',
@@ -25,4 +28,18 @@ export class User {
 
     @CreateDateColumn()
     createdAt: Date;
+
+    //relations
+    @OneToMany(() => Event, (event) => event.creator)
+    events: Event[];
+
+    @OneToMany(() => Subscription, (sub) => sub.user)
+    subscriptions: Subscription[];
+
+    @OneToMany(() => NotificationLog, (log) => log.user)
+    notificationLogs: NotificationLog[];
 }
+
+
+
+

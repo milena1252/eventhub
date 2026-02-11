@@ -13,6 +13,9 @@ import { CommonModule } from './common/common.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { BullModule } from '@nestjs/bull';
 import { ScheduleModule } from '@nestjs/schedule';
+import { AdminModule } from './admin/admin.module';
+import { OutboxModule } from './outbox/outbox.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -75,6 +78,12 @@ import { ScheduleModule } from '@nestjs/schedule';
     SubscriptionsModule,
 
     NotificationsModule,
+
+    AdminModule,
+
+    OutboxModule,
+
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
