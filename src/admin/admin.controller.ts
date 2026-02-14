@@ -1,12 +1,12 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
-import { Roles } from 'src/auth/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { UserRole } from 'src/users/user.entity';
 import { AdminService } from './admin.service';
 import { InjectQueue } from '@nestjs/bull';
 import type { Queue } from 'bull';
 import { ImportEventsDto } from 'src/events/dto/import-events.dto';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { RolesGuard } from 'src/common/guards/roles.guard';
 
 @Controller('admin')
 @UseGuards(JwtAuthGuard, RolesGuard)

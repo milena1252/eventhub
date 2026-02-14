@@ -2,8 +2,8 @@ import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, UseGuards } 
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { SubscriptionsService } from './subscriptions.service';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
-import type { RequestUser } from 'src/common/interfaces/request-with-user';
+import type { RequestUser } from 'src/common/interfaces/request-user.interface';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 
 @UseGuards(JwtAuthGuard)
 @Controller('subscriptions')

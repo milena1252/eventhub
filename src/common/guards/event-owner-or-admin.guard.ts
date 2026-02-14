@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from "@nestjs/common";
 import { Request } from "express";
 import { EventsService } from "src/events/events.service";
-import { RequestUser } from "../interfaces/request-with-user";
+import { RequestUser } from "../interfaces/request-user.interface";
 import { UserRole } from "src/users/user.entity";
 
 @Injectable()

@@ -4,12 +4,13 @@ import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { UpdateManyEventsDto } from './dto/update-many-events.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
-import type { RequestUser } from 'src/common/interfaces/request-with-user';
+import type { RequestUser } from 'src/common/interfaces/request-user.interface';
 import { EventOwnerOrAdminGuard } from 'src/common/guards/event-owner-or-admin.guard';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { Roles } from 'src/auth/decorators/roles.decorator';
+import { RolesGuard } from 'src/common/guards/roles.guard';
 import { UserRole } from 'src/users/user.entity';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { NormalizeEventPipe } from 'src/common/pipes/normalize-event.pipe';
 
 @Controller('events')
 export class EventsController {
@@ -21,7 +22,7 @@ export class EventsController {
     @Post()
     @HttpCode(201)
     create(
-        @Body() dto: CreateEventDto,
+        @Body(NormalizeEventPipe) dto: CreateEventDto,
         @CurrentUser() user: RequestUser,
     ) {
         return this.events.create(dto, user.id);
