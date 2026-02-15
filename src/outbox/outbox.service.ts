@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Outbox, OutboxStatus } from './outbox.entity';
 import { Repository } from 'typeorm';
 import { Subscription } from 'src/subscriptions/subscription.entity';
-import { NotificationChannel, NotificationStatus, NotificationType } from 'src/notifications/notification-log.entity';
+import { NotificationType } from 'src/notifications/notification-log.entity';
 import { Event } from 'src/events/event.entity';
 import { NotificationsService } from 'src/notifications/notifications.service';
 

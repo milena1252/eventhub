@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Subscription } from './subscription.entity';
 import { Repository } from 'typeorm';
 import { EventsService } from 'src/events/events.service';
-import { NotificationsService } from 'src/notifications/notifications.service';
 
 @Injectable()
 export class SubscriptionsService {
@@ -12,7 +11,6 @@ export class SubscriptionsService {
         private readonly subRepo: Repository<Subscription>,
         @Inject(forwardRef(() => EventsService))
         private readonly eventService: EventsService,
-        private readonly notifications: NotificationsService,
     ) {}
 
     async subscribe(userId: string, eventId: string) {

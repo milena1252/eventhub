@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { SubscriptionsService } from './subscriptions.service';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
@@ -13,6 +13,7 @@ export class SubscriptionsController {
     ) {}
 
     @Post()
+    @HttpCode(201)
     subscribe(
         @Body() dto: CreateSubscriptionDto,
         @CurrentUser() user: RequestUser,
@@ -21,6 +22,7 @@ export class SubscriptionsController {
     }
 
     @Delete(':eventId')
+    @HttpCode(204)
     unsubscribe(
         @Param('eventId', ParseUUIDPipe) eventId: string,
         @CurrentUser() user: RequestUser,
