@@ -12,7 +12,6 @@ export class NotificationStatProcessor {
         private readonly logRepo: Repository<NotificationLog>,
         @InjectRepository(NotificationStats)
         private readonly statsRepo: Repository<NotificationStats>,
-
     ) {}
 
     @Process('recalculate-notification-stats')

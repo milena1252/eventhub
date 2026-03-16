@@ -50,7 +50,6 @@ export class NotificationLog {
     @Column({
         type: 'enum',
         enum: NotificationType,
-        nullable: true,
     })
     type: NotificationType;
     
